@@ -24,7 +24,7 @@
 <meta property="og:description" content="go语言进阶语法指针Go语言中不存在指针操作，只需要记住两个符号：&amp;取地址，*根据地址取值 12345678910111213141516&#x2F;&#x2F;类似C语言实现指针传值func modify1(x int) &amp;#123;	x &#x3D; 100&amp;#125;func modify2(x *int) &amp;#123;	*x &#x3D; 100&amp;#125;func main() &amp;#123;	a :&#x3D; 10	modif">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-11-17T11:44:06.000Z">
-<meta property="article:modified_time" content="2021-11-19T06:26:29.945Z">
+<meta property="article:modified_time" content="2021-11-19T07:15:10.417Z">
 <meta property="article:author" content="Lengyusen">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -195,7 +195,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      5.4k 字
+      6.4k 字
     </span>
   
 
@@ -204,7 +204,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      17 分钟
+      20 分钟
     </span>
   
 
@@ -331,7 +331,7 @@
 
 <h4 id="函数作为返回值"><a href="#函数作为返回值" class="headerlink" title="函数作为返回值"></a>函数作为返回值</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">do</span><span class="hljs-params">(s <span class="hljs-keyword">string</span>)</span> <span class="hljs-params">(<span class="hljs-keyword">func</span>(<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span>, <span class="hljs-title">error</span>)</span> &#123;<br>	<span class="hljs-keyword">switch</span> s &#123;<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;+&quot;</span>:<br>		<span class="hljs-keyword">return</span> add, <span class="hljs-literal">nil</span><br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;-&quot;</span>:<br>		<span class="hljs-keyword">return</span> sub, <span class="hljs-literal">nil</span><br>	<span class="hljs-keyword">default</span>:<br>		err := errors.New(<span class="hljs-string">&quot;无法识别的操作符&quot;</span>)<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, err<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<h3 id="匿名函数-——没有名字的临时工"><a href="#匿名函数-——没有名字的临时工" class="headerlink" title="匿名函数 ——没有名字的临时工"></a>匿名函数 ——没有名字的临时工</h3><blockquote>
+<h3 id="匿名函数——没有名字的临时工"><a href="#匿名函数——没有名字的临时工" class="headerlink" title="匿名函数——没有名字的临时工"></a>匿名函数——没有名字的临时工</h3><blockquote>
 <p>匿名函数，顾名思义就是没有名字（准确来说是没有函数名字）的函数，它的定义往往是在一个函数里面。</p>
 </blockquote>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-comment">//函数内部没有办法声明带名字的函数，我们可以定义匿名函数</span><br>    f1:=<span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(x，y <span class="hljs-keyword">int</span>)</span>｛</span><br>    	fmt.Println(x+y)<br>    ｝<br>    f1(<span class="hljs-number">10</span>,<span class="hljs-number">20</span>)<br>｝<br>    <br>    <span class="hljs-comment">//如果只是调用一次的函数，还可以简写为立即执行函数</span><br><span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(x，y <span class="hljs-keyword">int</span>)</span>｛</span><br>	fmt.Println(x+y)<br>｝(<span class="hljs-number">100</span>,<span class="hljs-number">200</span>)<br></code></pre></td></tr></table></figure>
@@ -356,6 +356,26 @@
 <li><code>recover()</code>必须搭配<code>defer</code>使用。</li>
 <li><code>defer</code>一定要在可能引发<code>panic</code>的语句之前定义。</li>
 </ol>
+<h3 id="递归——自己调用自己"><a href="#递归——自己调用自己" class="headerlink" title="递归——自己调用自己"></a>递归——自己调用自己</h3><p>递归一定要有一个明确退出的条件，适合处理那种问题相同、问题规模越来越小的场景。</p>
+<p>计算阶乘：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">f</span><span class="hljs-params">(n <span class="hljs-keyword">uint64</span>)</span> <span class="hljs-title">uint64</span></span>&#123;<br>    <span class="hljs-keyword">if</span> n&lt;=<span class="hljs-number">1</span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> n*f(n<span class="hljs-number">-1</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上台阶问题：n个台阶，一次可以走一步，也可以走两步，有多少种走法。    </p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">taijie</span><span class="hljs-params">(n <span class="hljs-keyword">uint64</span>)</span> <span class="hljs-title">uint64</span></span>&#123;<br>    <span class="hljs-keyword">if</span> n==<span class="hljs-number">1</span>&#123;<br>        <span class="hljs-comment">//只有一个台阶就只有一种走法</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span><br>    &#125;<br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> n==<span class="hljs-number">2</span>&#123;<br>       	<span class="hljs-keyword">return</span> <span class="hljs-number">2</span><br>    &#125;<br>    <span class="hljs-keyword">else</span><br>    	reutrn taijie(n<span class="hljs-number">-1</span>)+taijie(n<span class="hljs-number">-2</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h2><h3 id="类型别名与自定义类型"><a href="#类型别名与自定义类型" class="headerlink" title="类型别名与自定义类型"></a>类型别名与自定义类型</h3><p> Go语言中可以使用<code>type</code>关键字来定义自定义类型。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">//将MyInt定义为int类型</span><br><span class="hljs-keyword">type</span> MyInt <span class="hljs-keyword">int</span><br></code></pre></td></tr></table></figure>
+
+<p>类型别名规定：TypeAlias只是Type的别名，本质上TypeAlias与Type是同一个类型。就像一个孩子小时候有小名、乳名，上学后用学名，英语老师又会给他起英文名，但这些名字都指的是他本人。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">//我们之前见过的rune和byte就是类型别名，他们的定义如下：</span><br><span class="hljs-keyword">type</span> <span class="hljs-keyword">byte</span> = <span class="hljs-keyword">uint8</span><br><span class="hljs-keyword">type</span> <span class="hljs-keyword">rune</span> = <span class="hljs-keyword">int32</span><br></code></pre></td></tr></table></figure>
+
+<p>二者的区别：</p>
+<p>类型别名与类型定义表面上看只有一个等号的差异，我们通过下面的这段代码来理解它们之间的区别。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">//类型定义</span><br><span class="hljs-keyword">type</span> NewInt <span class="hljs-keyword">int</span><br><br><span class="hljs-comment">//类型别名</span><br><span class="hljs-keyword">type</span> MyInt = <span class="hljs-keyword">int</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> a NewInt<br>	<span class="hljs-keyword">var</span> b MyInt<br>	<br>	fmt.Printf(<span class="hljs-string">&quot;type of a:%T\n&quot;</span>, a) <span class="hljs-comment">//type of a:main.NewInt</span><br>	fmt.Printf(<span class="hljs-string">&quot;type of b:%T\n&quot;</span>, b) <span class="hljs-comment">//type of b:int</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>结果显示a的类型是<code>main.NewInt</code>，表示main包下定义的<code>NewInt</code>类型。b的类型是<code>int</code>。<code>MyInt</code>类型只会在代码中存在，编译完成时并不会有<code>MyInt</code>类型。</p>
+<h3 id="结构体的定义"><a href="#结构体的定义" class="headerlink" title="结构体的定义"></a>结构体的定义</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> name <span class="hljs-keyword">struct</span>&#123;<br>    field1 type1<br>    field2 type2<br>    field3 type3<br>&#125;<br></code></pre></td></tr></table></figure>
+
 
             </div>
             <hr>
