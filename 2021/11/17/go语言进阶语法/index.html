@@ -24,7 +24,7 @@
 <meta property="og:description" content="go语言进阶语法指针Go语言中不存在指针操作，只需要记住两个符号：&amp;取地址，*根据地址取值 12345678910111213141516&#x2F;&#x2F;类似C语言实现指针传值func modify1(x int) &amp;#123;	x &#x3D; 100&amp;#125;func modify2(x *int) &amp;#123;	*x &#x3D; 100&amp;#125;func main() &amp;#123;	a :&#x3D; 10	modif">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-11-17T11:44:06.000Z">
-<meta property="article:modified_time" content="2021-11-18T15:17:20.739Z">
+<meta property="article:modified_time" content="2021-11-19T06:26:29.945Z">
 <meta property="article:author" content="Lengyusen">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -195,7 +195,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3.6k 字
+      5.4k 字
     </span>
   
 
@@ -204,7 +204,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      11 分钟
+      17 分钟
     </span>
   
 
@@ -237,7 +237,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年11月18日 晚上
+                  本文最后更新于：2021年11月19日 下午
                 
               </p>
             
@@ -264,7 +264,7 @@
 <li>new很少用，一般用来给基本数据类型申请内存，int，返回的是对应指针*int</li>
 <li>make是用来给slice、map、chan申请内存的，make函数返回的是类型本身</li>
 </ol>
-<h2 id="字典map"><a href="#字典map" class="headerlink" title="字典map"></a>字典map</h2><p>基本上所有的编程语言都自带一种数据结构，它主要提供一个快速的查找，插入，删除，具备与存储体量无关的O（1）的性能，并且支持key上面的唯一性。go也原生提供了一个类似的数据类型，就叫做map。</p>
+<h2 id="字典map——用时间换空间"><a href="#字典map——用时间换空间" class="headerlink" title="字典map——用时间换空间"></a>字典map——用时间换空间</h2><p>基本上所有的编程语言都自带一种数据结构，它主要提供一个快速的查找，插入，删除，具备与存储体量无关的O（1）的性能，并且支持key上面的唯一性。go也原生提供了一个类似的数据类型，就叫做map。</p>
 <p>关键点：</p>
 <ol>
 <li>map 是由 <code>key-value</code> 对（键值对）组成的</li>
@@ -304,7 +304,7 @@
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">intSum2</span><span class="hljs-params">(x ...<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;<br>	fmt.Println(x) <span class="hljs-comment">//x是一个切片，可以传多个参数 </span><br>	sum := <span class="hljs-number">0</span><br>	<span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> x &#123;<br>		sum = sum + v<br>	&#125;<br>	<span class="hljs-keyword">return</span> sum<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>Go语言支持多个返回值</p>
-<h3 id="defer"><a href="#defer" class="headerlink" title="defer"></a>defer</h3><blockquote>
+<h3 id="defer——收尾工作执行者"><a href="#defer——收尾工作执行者" class="headerlink" title="defer——收尾工作执行者"></a>defer——收尾工作执行者</h3><blockquote>
 <p>有时候我们想在一个函数的末尾处调用一个统一的函数来进行一些收尾工作，但是如果函数分支众多，那么就有可能会疏忽大意导致在某个分支中没调用这个收尾函数。Go函数里提供了defer关键字，可以注册多个<strong>延迟调用</strong>，这些调用以<strong>先进后出</strong>的顺序在<strong>函数返回前执行</strong>。defer调用的执行时机是外层函数<strong>设置返回值之后</strong>，<strong>即将返回之前</strong>。</p>
 <p>defer之后跟的是一个函数（并且这个函数要被调用），当 go 执行到一个 defer 时，不会立即执行 defer 后的语句，而是将 defer 后的函数以及相关的变量的拷贝压入到一个栈中, 然后继续执行函数下一个语句，defer在将调用压入栈前会先对函数的入参进行求值并拷贝一份。</p>
 <p>在<code>defer</code>归属的函数即将返回时，将延迟处理的语句按<code>defer</code>定义的逆序进行执行，也就是说，先被<code>defer</code>的语句最后被执行，最后被<code>defer</code>的语句，最先被执行</p>
@@ -321,7 +321,42 @@
 <h4 id="defer案例"><a href="#defer案例" class="headerlink" title="defer案例"></a>defer案例</h4><p>阅读下面的代码，写出最后的打印结果。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">f1</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span> &#123;<br>	x := <span class="hljs-number">5</span><br>	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		x++<span class="hljs-comment">//修改的是返回值，不是返回值</span><br>	&#125;()<br>	<span class="hljs-keyword">return</span> x<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">f2</span><span class="hljs-params">()</span> <span class="hljs-params">(x <span class="hljs-keyword">int</span>)</span></span> &#123;<br>	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		x++<br>	&#125;()<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">5</span><span class="hljs-comment">//返回值=x</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">f3</span><span class="hljs-params">()</span> <span class="hljs-params">(y <span class="hljs-keyword">int</span>)</span></span> &#123;<br>	x := <span class="hljs-number">5</span><br>	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		x++<span class="hljs-comment">//修改x</span><br>	&#125;()<br>	<span class="hljs-keyword">return</span> x<span class="hljs-comment">//返回值=y=x=5 说明事先声明了一个返回值变量</span><br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">f4</span><span class="hljs-params">()</span> <span class="hljs-params">(x <span class="hljs-keyword">int</span>)</span></span> &#123;<br>	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(x <span class="hljs-keyword">int</span>)</span></span> &#123;<br>		x++<span class="hljs-comment">//改变的是函数中的副本</span><br>	&#125;(x)<span class="hljs-comment">//返回值=x=5</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-number">5</span><br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(f1())<br>	fmt.Println(f2())<br>	fmt.Println(f3())<br>	fmt.Println(f4())<br>&#125;<br><span class="hljs-comment">//输出 5 6 5 5</span><br></code></pre></td></tr></table></figure>
 
-<h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><h3 id="匿名函数"><a href="#匿名函数" class="headerlink" title="匿名函数"></a>匿名函数</h3><h3 id><a href="#" class="headerlink" title></a></h3>
+<h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><ul>
+<li>全局作用域</li>
+<li>函数作用域：先在函数内部找变量，找不到往外层找：函数内部变量外层访问不到</li>
+<li>代码块作用域</li>
+</ul>
+<h3 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h3><p>高阶函数分为函数作为参数和函数作为返回值两部分。</p>
+<h4 id="函数作为参数"><a href="#函数作为参数" class="headerlink" title="函数作为参数"></a>函数作为参数</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">add</span><span class="hljs-params">(x, y <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;<br>	<span class="hljs-keyword">return</span> x + y<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">calc</span><span class="hljs-params">(x, y <span class="hljs-keyword">int</span>, op <span class="hljs-keyword">func</span>(<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span>) <span class="hljs-title">int</span></span> &#123;<br>	<span class="hljs-keyword">return</span> op(x, y)<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	ret2 := calc(<span class="hljs-number">10</span>, <span class="hljs-number">20</span>, add)<br>	fmt.Println(ret2) <span class="hljs-comment">//30</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="函数作为返回值"><a href="#函数作为返回值" class="headerlink" title="函数作为返回值"></a>函数作为返回值</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">do</span><span class="hljs-params">(s <span class="hljs-keyword">string</span>)</span> <span class="hljs-params">(<span class="hljs-keyword">func</span>(<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span>, <span class="hljs-title">error</span>)</span> &#123;<br>	<span class="hljs-keyword">switch</span> s &#123;<br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;+&quot;</span>:<br>		<span class="hljs-keyword">return</span> add, <span class="hljs-literal">nil</span><br>	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;-&quot;</span>:<br>		<span class="hljs-keyword">return</span> sub, <span class="hljs-literal">nil</span><br>	<span class="hljs-keyword">default</span>:<br>		err := errors.New(<span class="hljs-string">&quot;无法识别的操作符&quot;</span>)<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, err<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="匿名函数-——没有名字的临时工"><a href="#匿名函数-——没有名字的临时工" class="headerlink" title="匿名函数 ——没有名字的临时工"></a>匿名函数 ——没有名字的临时工</h3><blockquote>
+<p>匿名函数，顾名思义就是没有名字（准确来说是没有函数名字）的函数，它的定义往往是在一个函数里面。</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-comment">//函数内部没有办法声明带名字的函数，我们可以定义匿名函数</span><br>    f1:=<span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(x，y <span class="hljs-keyword">int</span>)</span>｛</span><br>    	fmt.Println(x+y)<br>    ｝<br>    f1(<span class="hljs-number">10</span>,<span class="hljs-number">20</span>)<br>｝<br>    <br>    <span class="hljs-comment">//如果只是调用一次的函数，还可以简写为立即执行函数</span><br><span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(x，y <span class="hljs-keyword">int</span>)</span>｛</span><br>	fmt.Println(x+y)<br>｝(<span class="hljs-number">100</span>,<span class="hljs-number">200</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h3><p>闭包=函数+外部变量的引用</p>
+<blockquote>
+<p>闭包是携带状态的函数，它是将函数内部和函数外部连接起来的桥梁。通过闭包，我们可以读取函数内部的变量。闭包能够引用其作用域上部的变量并进行修改，被捕获到闭包中的变量将随着闭包的生命周期一直存在，函数本身是不存储信息的，但是闭包中的变量使闭包本身具备了存储信息的能力。另外，在项目中<strong>不要乱用闭包</strong>，因为这种操作用处不大。</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">calc</span><span class="hljs-params">(base <span class="hljs-keyword">int</span>)</span> <span class="hljs-params">(<span class="hljs-keyword">func</span>(<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span>, <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span>)</span> &#123;<br>	add := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(i <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;<br>		base += i<br>		<span class="hljs-keyword">return</span> base<br>	&#125;<br><br>	sub := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(i <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;<br>		base -= i<br>		<span class="hljs-keyword">return</span> base<br>	&#125;<br>	<span class="hljs-keyword">return</span> add, sub<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	f1, f2 := calc(<span class="hljs-number">10</span>)<br>	fmt.Println(f1(<span class="hljs-number">1</span>), f2(<span class="hljs-number">2</span>)) <span class="hljs-comment">//11 9</span><br>	fmt.Println(f1(<span class="hljs-number">3</span>), f2(<span class="hljs-number">4</span>)) <span class="hljs-comment">//12 8</span><br>	fmt.Println(f1(<span class="hljs-number">5</span>), f2(<span class="hljs-number">6</span>)) <span class="hljs-comment">//13 7</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="panic-amp-recover—我叫程序，我感到恐慌"><a href="#panic-amp-recover—我叫程序，我感到恐慌" class="headerlink" title="panic&amp;recover—我叫程序，我感到恐慌"></a>panic&amp;recover—我叫程序，我感到恐慌</h3><p>panic和recover是两个内置函数，这两个内置函数用来处理Go的运行错误(runtime errors)</p>
+<ul>
+<li><p> panic用来主动抛出错误 </p>
+</li>
+<li><p> recover用来捕获panic抛出的错误 </p>
+</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;fmt&quot;</span><br>)<br><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">funcA</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(<span class="hljs-string">&quot;a&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">funcB</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		err := <span class="hljs-built_in">recover</span>()<br>		<span class="hljs-comment">//如果程序出出现了panic错误,可以通过recover恢复过来</span><br>		fmt.Println(err)<br>		fmt.Println(<span class="hljs-string">&quot;释放数据库连接......&quot;</span>)<br>	&#125;()<br>	<span class="hljs-built_in">panic</span>(<span class="hljs-string">&quot;出现严重错误&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">funcC</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(<span class="hljs-string">&quot;c&quot;</span>)<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	funcA()<br>	funcB()<br>	funcC()<br>&#125;<br><span class="hljs-comment">/*输出</span><br><span class="hljs-comment">a</span><br><span class="hljs-comment">出现严重错误</span><br><span class="hljs-comment">释放数据库连接......</span><br><span class="hljs-comment">c*/</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong></p>
+<ol>
+<li><code>recover()</code>必须搭配<code>defer</code>使用。</li>
+<li><code>defer</code>一定要在可能引发<code>panic</code>的语句之前定义。</li>
+</ol>
+
             </div>
             <hr>
             <div>
