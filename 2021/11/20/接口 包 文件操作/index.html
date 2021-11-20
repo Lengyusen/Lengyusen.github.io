@@ -1,0 +1,485 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Lengyusen">
+  <meta name="keywords" content="">
+  <meta name="description" content="接口我们设想一下：  一个网上商城可能使用支付宝、微信、银联等方式去在线支付，我们能不能把它们当成“支付方式”来处理呢？ 三角形，四边形，圆形都能计算周长和面积，我们能不能把它们当成“图形”来处理呢？ 销售、行政、程序员都能计算月薪，我们能不能把他们当成“员工”来处理呢？ 手机是商品类，电子产品也是商品类，难道我们要在手机和电子产品结构体中都加上商品结构体吗  所以我们在编程中会遇到一下问题：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="接口 包 文件操作">
+<meta property="og:url" content="https://clannad603.github.io/2021/11/20/%E6%8E%A5%E5%8F%A3%20%E5%8C%85%20%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="一个仰望星空的小朋友">
+<meta property="og:description" content="接口我们设想一下：  一个网上商城可能使用支付宝、微信、银联等方式去在线支付，我们能不能把它们当成“支付方式”来处理呢？ 三角形，四边形，圆形都能计算周长和面积，我们能不能把它们当成“图形”来处理呢？ 销售、行政、程序员都能计算月薪，我们能不能把他们当成“员工”来处理呢？ 手机是商品类，电子产品也是商品类，难道我们要在手机和电子产品结构体中都加上商品结构体吗  所以我们在编程中会遇到一下问题：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-20T07:18:00.000Z">
+<meta property="article:modified_time" content="2021-11-20T11:49:51.779Z">
+<meta property="article:author" content="Lengyusen">
+<meta name="twitter:card" content="summary_large_image">
+  
+  <title>接口 包 文件操作 - 一个仰望星空的小朋友</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"clannad603.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Mr.L&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/article.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="接口 包 文件操作">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-11-20 15:18" pubdate>
+        2021年11月20日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      8 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">接口 包 文件操作</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年11月20日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h1 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h1><p>我们设想一下：</p>
+<ul>
+<li>一个网上商城可能使用支付宝、微信、银联等方式去在线支付，我们能不能把它们当成“支付方式”来处理呢？</li>
+<li>三角形，四边形，圆形都能计算周长和面积，我们能不能把它们当成“图形”来处理呢？</li>
+<li>销售、行政、程序员都能计算月薪，我们能不能把他们当成“员工”来处理呢？</li>
+<li>手机是商品类，电子产品也是商品类，难道我们要在手机和电子产品结构体中都加上商品结构体吗</li>
+</ul>
+<p>所以我们在编程中会遇到一下问题：</p>
+<ul>
+<li>我不关心一个变量是什么类型，我只关心能调用它的什么方法</li>
+</ul>
+<blockquote>
+<p>Go语言中为了解决类似上面的问题，就设计了接口这个概念。接口区别于我们之前所有的具体类型，接口是一种<strong>抽象的类型</strong>，它规定了变量有哪些方法。当你看到一个接口类型的值时，你不知道它是什么，唯一知道的是通过它的方法能做什么。</p>
+</blockquote>
+<h2 id="接口的定义"><a href="#接口的定义" class="headerlink" title="接口的定义"></a>接口的定义</h2><p>Go语言提倡面向接口编程。</p>
+<p>每个接口由数个方法组成，接口的定义格式如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> 接口类型名 <span class="hljs-keyword">interface</span>&#123;<br>    方法名<span class="hljs-number">1</span>( 参数列表<span class="hljs-number">1</span> ) 返回值列表<span class="hljs-number">1</span><br>    方法名<span class="hljs-number">2</span>( 参数列表<span class="hljs-number">2</span> ) 返回值列表<span class="hljs-number">2</span><br>    …<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>举个例子，不管是什么类型的车，都可以驾驶：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><br><span class="hljs-comment">//定义一个car接口类型  不管是什么结构体 只要有run方法都能是car类型</span><br><span class="hljs-keyword">type</span> car <span class="hljs-keyword">interface</span>&#123;<br>   run()<br>&#125;<br><br><span class="hljs-keyword">type</span> falali <span class="hljs-keyword">struct</span>&#123;<br>   brand <span class="hljs-keyword">string</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(f falali)</span><span class="hljs-title">run</span><span class="hljs-params">()</span></span>&#123;<br>   fmt.Printf(<span class="hljs-string">&quot;%s速度70迈\n&quot;</span>,f.brand)<br>&#125;<br><br><span class="hljs-keyword">type</span> baoshijie <span class="hljs-keyword">struct</span>&#123;<br>   brand <span class="hljs-keyword">string</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(b baoshijie)</span><span class="hljs-title">run</span><span class="hljs-params">()</span></span>&#123;<br>   fmt.Printf(<span class="hljs-string">&quot;%s速度70迈\n&quot;</span>,b.brand)<br>&#125;<br><br><span class="hljs-comment">//drive函数接收一个car类型的变量</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">drive</span><span class="hljs-params">(c car)</span></span>&#123;<br>   c.run()<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>   <span class="hljs-keyword">var</span> f1 = falali&#123;<br>      brand:<span class="hljs-string">&quot;法拉利&quot;</span>,<br>   &#125;<br>   <span class="hljs-keyword">var</span> b1 = baoshijie&#123;<br>   brand:<span class="hljs-string">&quot;保时捷&quot;</span>,<br>   &#125;<br>   drive(f1)<br>   drive(b1)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="接口的实现"><a href="#接口的实现" class="headerlink" title="接口的实现"></a>接口的实现</h2><p>一个变量如果实现了接口中规定的所有方法，那么这个变量就实现了这个接口，可以称为这个接口类型的变量。</p>
+<ul>
+<li>多个类型可以实现同一个接口</li>
+<li>一个类型可以实现多个接口</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> animal <span class="hljs-keyword">interface</span>&#123;<br>    move()<br>    eat(<span class="hljs-keyword">string</span>)<br>&#125;<br><span class="hljs-keyword">type</span> cat <span class="hljs-keyword">struct</span>&#123;<br>    name <span class="hljs-keyword">string</span><br>    feet <span class="hljs-keyword">int8</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="值接收者实现接口"><a href="#值接收者实现接口" class="headerlink" title="值接收者实现接口"></a>值接收者实现接口</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">//使用值接收者实现了接口的所有方法</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c cat)</span> <span class="hljs-title">move</span><span class="hljs-params">()</span></span>&#123;<br>    fmt.Println(<span class="hljs-string">&quot;走猫步......&quot;</span>)<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c cat)</span> <span class="hljs-title">eat</span><span class="hljs-params">(food <span class="hljs-keyword">string</span>)</span></span>&#123;<br>    fmt.Printf(<span class="hljs-string">&quot;猫吃%s...\n&quot;</span>,food)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>	<span class="hljs-keyword">var</span> a1,a2 animal<br>	c1:=cat&#123;<span class="hljs-string">&quot;tom&quot;</span>,<span class="hljs-number">4</span>&#125;<span class="hljs-comment">//cat</span><br>	c2:=&amp;cat&#123;<span class="hljs-string">&quot;假老练&quot;</span>,<span class="hljs-number">4</span>&#125;<span class="hljs-comment">//*cat</span><br>	a1=c1<br>	a2=c2<br>	fmt.Println(a1)<br>	fmt.Println(a2)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="指针接收者实现接口"><a href="#指针接收者实现接口" class="headerlink" title="指针接收者实现接口"></a>指针接收者实现接口</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">//使用指针接收者实现了接口的所有方法</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c *cat)</span> <span class="hljs-title">move</span><span class="hljs-params">()</span></span>&#123;<br>    fmt.Println(<span class="hljs-string">&quot;走猫步......&quot;</span>)<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c *cat)</span> <span class="hljs-title">eat</span><span class="hljs-params">(food <span class="hljs-keyword">string</span>)</span></span>&#123;<br>    fmt.Printf(<span class="hljs-string">&quot;猫吃%s...\n&quot;</span>,food)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>	<span class="hljs-keyword">var</span> a1,a2 animal<br>	c1:=cat&#123;<span class="hljs-string">&quot;tom&quot;</span>,<span class="hljs-number">4</span>&#125;<br>	c2:=&amp;cat&#123;<span class="hljs-string">&quot;假老练&quot;</span>,<span class="hljs-number">4</span>&#125;<br>	a1=&amp;c1<br>	a2=c2<br>	fmt.Println(a1)<br>	fmt.Println(a2)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>使用值接收者和使用指针接收者实现接口的区别：</p>
+<ul>
+<li>使用值接收者实现接口，结构体类型和结构体指针类型的变量都能存</li>
+<li>指针接收者实现接口只能存结构体指针类型的变量</li>
+</ul>
+<h3 id="接口的嵌套"><a href="#接口的嵌套" class="headerlink" title="接口的嵌套"></a>接口的嵌套</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-keyword">type</span> animal <span class="hljs-keyword">interface</span>&#123;<br>   mover<br>   eater<br>&#125;<br><span class="hljs-keyword">type</span> mover <span class="hljs-keyword">interface</span>&#123;<br>   move()<br>&#125;<br><span class="hljs-keyword">type</span> eater <span class="hljs-keyword">interface</span>&#123;<br>   eat()<br>&#125;<br><br><span class="hljs-keyword">type</span> cat <span class="hljs-keyword">struct</span>&#123;<br>   name <span class="hljs-keyword">string</span><br>   feet <span class="hljs-keyword">int8</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c cat)</span> <span class="hljs-title">move</span><span class="hljs-params">()</span></span>&#123;<br>   fmt.Println(<span class="hljs-string">&quot;走猫步......&quot;</span>)<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c cat)</span> <span class="hljs-title">eat</span><span class="hljs-params">(food <span class="hljs-keyword">string</span>)</span></span>&#123;<br>   fmt.Printf(<span class="hljs-string">&quot;猫吃%s...\n&quot;</span>,food)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>   <span class="hljs-keyword">var</span> c1 cat<br>   c1.name=<span class="hljs-string">&quot;假老练&quot;</span><br>   c1.feet=<span class="hljs-number">4</span><br>   c1.move()<br>   c1.eat(<span class="hljs-string">&quot;fish&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="空接口"><a href="#空接口" class="headerlink" title="空接口"></a>空接口</h2><p>没有必要起名字，通常定义成下面这样的格式：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">interface</span>&#123;&#125;<span class="hljs-comment">//空接口</span><br></code></pre></td></tr></table></figure>
+
+<p>所有类型都实现了空接口，也就是任意类型的变量都能保存到空接口中</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Web%E5%90%8E%E7%AB%AF-go%E8%AF%AD%E8%A8%80/">Web后端-go语言</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/11/17/%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86/">
+                        <span class="hidden-mobile">预备知识</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
