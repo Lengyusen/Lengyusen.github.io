@@ -24,7 +24,7 @@
 <meta property="og:description" content="文件操作打开和关闭文件os.Open()函数能够打开一个文件，返回一个*File和一个err。对得到的文件实例调用close()方法能够关闭文件。 123456789func main()&amp;#123;   fileObj,err :&#x3D;os.Open(&quot;.&#x2F;main.go&quot;)   if err!&#x3D;nil&amp;#123;      fmt.Println(&quot;open file">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-11-21T05:07:34.000Z">
-<meta property="article:modified_time" content="2021-11-30T03:45:53.795Z">
+<meta property="article:modified_time" content="2021-12-07T03:22:12.124Z">
 <meta property="article:author" content="Lengyusen">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -195,7 +195,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.8k 字
+      3.9k 字
     </span>
   
 
@@ -204,7 +204,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      9 分钟
+      12 分钟
     </span>
   
 
@@ -245,7 +245,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年11月30日 中午
+                  本文最后更新于：2021年12月7日 上午
                 
               </p>
             
@@ -307,6 +307,18 @@
 
 <h2 id="时间戳"><a href="#时间戳" class="headerlink" title="时间戳"></a>时间戳</h2><p>时间戳是自1970年1月1日（08:00:00GMT）至当前时间的总毫秒数。它也被称为Unix时间戳（UnixTimestamp）。使用<code>time.Unix()</code>函数可以将时间戳转为时间格式。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>   now:=time.Now()<br>   fmt.Println(now)<br>   fmt.Println(now.Unix())<br>   fmt.Println(now.UnixNano())<span class="hljs-comment">//纳秒时间戳</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="时间间隔"><a href="#时间间隔" class="headerlink" title="时间间隔"></a>时间间隔</h2><p><code>time.Duration</code>是<code>time</code>包定义的一个类型，它代表两个时间点之间经过的时间，以纳秒为单位。<code>time.Duration</code>表示一段时间间隔，可表示的最长时间段大约290年。</p>
+<p>time包中定义的时间间隔类型的常量如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">const</span> (<br>    Nanosecond  Duration = <span class="hljs-number">1</span><br>    Microsecond          = <span class="hljs-number">1000</span> * Nanosecond<br>    Millisecond          = <span class="hljs-number">1000</span> * Microsecond<br>    Second               = <span class="hljs-number">1000</span> * Millisecond<br>    Minute               = <span class="hljs-number">60</span> * Second<br>    Hour                 = <span class="hljs-number">60</span> * Minute<br>)<br></code></pre></td></tr></table></figure>
+
+<p>例如：<code>time.Duration</code>表示1纳秒，<code>time.Second</code>表示1秒。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>	now:=time.Now()<br>	fmt.Println(time.Second)<br>	<span class="hljs-comment">//now + 24小时</span><br>	fmt.Println(now.Add(<span class="hljs-number">24</span>*time.Hour))<br>	<span class="hljs-comment">//定时器</span><br>	timer:=time.Tick(time.Second)<br>	<span class="hljs-keyword">for</span> t:=<span class="hljs-keyword">range</span> timer&#123;<br>		fmt.Println(t)<span class="hljs-comment">//1秒钟执行一次</span><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="时间格式化"><a href="#时间格式化" class="headerlink" title="时间格式化"></a>时间格式化</h2><p>时间类型有一个自带的方法<code>Format</code>进行格式化，需要注意的是Go语言中格式化时间模板不是常见的<code>Y-m-d H:M:S</code>而是使用Go的诞生时间2006年1月2号15点04分（记忆口诀为2006 1 2 3 4）。</p>
+<p>补充：如果想格式化为12小时方式，需指定<code>PM</code>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>	now:=time.Now()<br>	<span class="hljs-comment">//格式化时间，把语言对象中的时间对象，转换成字符串类型的时间</span><br>	fmt.Println(now.Format(<span class="hljs-string">&quot;2006-01-02 15:04:05&quot;</span>))<br>	<span class="hljs-comment">//按照对应的格式解析字符串类型的时间</span><br>	timeObj,err:=time.Parse(<span class="hljs-string">&quot;2006-01-02&quot;</span>,<span class="hljs-string">&quot;2021-12-07&quot;</span>)<br>	<span class="hljs-keyword">if</span> err!=<span class="hljs-literal">nil</span>&#123;<br>		fmt.Println(<span class="hljs-string">&quot;parse time failed,err:%v\n&quot;</span>,err)<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	fmt.Println(timeObj)<br>	fmt.Println(timeObj.Unix())<br>	<span class="hljs-comment">//Sleep</span><br>	n:=<span class="hljs-number">5</span><br>	fmt.Println(<span class="hljs-string">&quot;开始Sleep了&quot;</span>)<br>	time.Sleep(time.Duration(n)*time.Second)<br>	fmt.Println(<span class="hljs-string">&quot;5秒钟过去了&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
 
             </div>
             <hr>
